@@ -9,14 +9,12 @@ class Simplex:
         self.c = np.array(c)
         self.mode = mode
 
-        # self.A = np.column_stack((self.A, np.eye(self.b.size)))
-        # self.c = np.append(self.c, np.zeros(self.b.size))
-
         matrix = np.c_[b, self.A]
         self.matrix = np.r_[matrix, [[0, *self.c]]]
         self.origin_matrix = np.copy(self.matrix)
         # берем функционал с обратным знаком
         self.matrix[-1] *= -1
+        self.matrix[-1][self.matrix[-1] == -0.0] = 0.0
 
         s0 = "S0"
         self.columns = [s0] + [f'x{i + 1}' for i in range(len(self.matrix[0][1:]))]

@@ -35,11 +35,11 @@ class Tree:
             b = np.append(node.value.b, el)
             simplex = s.Simplex(a, b, node.value.c, mode="max")
             try:
-                print(f"ПЕРЕХОД ВЛЕВО ПО ПЕРМЕННОЙ x{idx} <= {el}")
+                print(f"ПЕРЕХОД ВЛЕВО ПО ПЕРМЕННОЙ x{idx + 1} <= {el}")
                 simplex.get_result()
             except AssertionError:
                 node.left = Node("Нет\n решения", simplex)
-                print(f"в ветке x{idx} <= {el} нет решения")
+                print(f"в ветке x{idx + 1} <= {el} нет решения")
                 return
             node.left = Node(simplex.answer[0], simplex)
             self.branching(node.left)
@@ -50,11 +50,11 @@ class Tree:
             b_right = np.append(node.value.b, -(el + 1))
             simplex = s.Simplex(a_right, b_right, node.value.c, mode="max")
             try:
-                print(f"ПЕРЕХОД ВПРАВО ПО ПЕРМЕННОЙ x{idx} => {el+1}")
+                print(f"ПЕРЕХОД ВПРАВО ПО ПЕРМЕННОЙ x{idx + 1} => {el+1}")
                 simplex.get_result()
             except AssertionError:
                 node.right = Node("Нет решения", simplex)
-                print(f"в ветке x{idx} >= {el+1} нет решения")
+                print(f"в ветке x{idx + 1} >= {el+1} нет решения")
                 return
             node.right = Node(simplex.answer[0], simplex)
             self.branching(node.right)
@@ -110,7 +110,7 @@ class Tree:
         # Two children.
         left, n, p, x = self._display_aux(node.left)
         right, m, q, y = self._display_aux(node.right)
-        s = '%s' % node.f
+        s = f"{node.f}"
         u = len(s)
         first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
         second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '

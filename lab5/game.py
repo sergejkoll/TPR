@@ -56,4 +56,11 @@ class Game:
     def solution(self):
         self.preparation_before_simplex()
         self.simplex_method()
+        self.result_a = [round(x, 3) for x in self.result_a]
+        self.result_b = [round(x, 3) for x in self.result_b]
+        self.check_solution()
         return self.result_a, self.result_b
+
+    def check_solution(self):
+        assert np.sum(self.result_a[1:]) == 1.0, f"Решение игрока А не верно"
+        assert np.sum(self.result_b[1:]) == 1.0, f"Решение игрока B не верно"

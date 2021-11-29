@@ -26,17 +26,20 @@ class Gomory:
         return np.argmax(solution[0])
 
     def solution(self):
-        while True:
+        integer_solution = False
+        while not integer_solution:
             self.simplex.get_result()
             integer_solution = self.check_solution(self.simplex.answer)
             if integer_solution:
-                return self.simplex.answer
+                break
             idx = self.find_max_fractional_part(self.simplex.answer[:-1])
             new_limit_array = np.modf(self.simplex.matrix[idx][1:])[0]
             for index, el in enumerate(new_limit_array):
                 if el < 0:
                     new_limit_array[index] = el + 1
-            new_a = np.vstack([self.simplex.A, new_limit_array * -1])
+            new_limit_array *= -1
+            new_limit_array[new_limit_array == -0.0] = 0.0
+            new_a = np.vstack([self.simplex.A, new_limit_array])
             new_limit = np.modf(self.simplex.answer[idx])[0]
             new_b = np.append(self.simplex.b, new_limit * -1)
             added_column = np.zeros(new_b.size)
@@ -45,3 +48,4 @@ class Gomory:
             new_c = np.append(self.simplex.c, 0)
             self.simplex = s.Simplex(new_a, new_b, new_c, "max")
 
+        return self.simplex.answer
